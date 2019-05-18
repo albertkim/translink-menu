@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './App.css'
 
 const gridRows = 200
@@ -22,6 +22,19 @@ for (let y = 0; y < gridRows; y++) {
 function App() {
 
   const [grid, setGrid] = useState(masterGrid)
+
+  // Restore saved version
+  useEffect(() => {
+    const existingGrid = window.localStorage.getItem('grid')
+    if (existingGrid) {
+      setGrid(JSON.parse(existingGrid))
+    }
+  }, [])
+
+  // Save after each click
+  useEffect(() => {
+    window.localStorage.setItem('grid', JSON.stringify(grid))
+  })
 
   const toggleCoordinate = (x, y) => {
     const clonedGrid = JSON.parse(JSON.stringify(grid))
