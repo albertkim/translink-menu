@@ -1,26 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react'
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const gridRows = 200
+const gridColumns = 50
+
+// Array of arrays. First rows, then columns
+const masterGrid = []
+
+for (let y = 0; y < gridRows; y++) {
+  const row = []
+  for (let x = 0; x < gridColumns; x++) {
+    row.push(
+      {
+        lit: false
+      }
+    )
+  }
+  masterGrid.push(row)
 }
 
-export default App;
+function App() {
+
+  const [grid, setGrid] = useState(masterGrid)
+
+  const toggleCoordinate = (x, y) => {
+    const clonedGrid = JSON.parse(JSON.stringify(grid))
+    clonedGrid[y][x].lit = !clonedGrid[y][x].lit
+    setGrid(clonedGrid)
+  }
+
+  return (
+    <div>
+      {
+        grid.map((y, yIndex) => {
+          return (
+            <div style={{display: 'flex'}} key={yIndex}>
+              {
+                y.map((x, xIndex) => {
+                  return (
+                    <div className='grid' index={`${xIndex}${yIndex}`} key={xIndex}>
+                      <a href='#' onClick={() => toggleCoordinate(xIndex, yIndex)}>
+                        <div className={`fa fa-circle ${x.lit ? 'lit' : 'unlit'}`} />
+                      </a>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          )
+        })
+      }
+    </div>
+  )
+}
+
+export default App
